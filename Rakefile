@@ -115,6 +115,14 @@ class VagrantTask < KitchenTask
   end
 end
 
+class Ec2Task < KitchenTask
+  def initialize(version)
+    super(version)
+    @env['KITCHEN_YAML'] = '.kitchen.ec2.yml'
+    @concurrency = ENV.fetch('concurrency', 12).to_i
+  end
+end
+
 namespace :test do
   default_versions = %w[0.8.1.1 0.8.2.2 0.9.0.1 0.10.0.1 0.10.1.1 0.10.2.1 0.11.0.0]
 
@@ -187,6 +195,12 @@ namespace :test do
   task :vagrant do
     versions = ENV.fetch('versions', default_versions.join(',')).split(',')
     run_tests_for(versions, VagrantTask)
+  end
+
+  desc 'Run test-kitchen with kitchen-ec2'
+  task :ec2 do
+    versions = ENV.fetch('versions', default_versions.join(',')).split(',')
+    run_tests_for(versions, Ec2Task)
   end
 end
 
