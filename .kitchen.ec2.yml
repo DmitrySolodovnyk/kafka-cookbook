@@ -102,3 +102,16 @@ suites:
     attributes:
       kafka:
         init_style: 'systemd'
+  - name: runit
+    run_list:
+      - recipe[java]
+      - recipe[runit]
+      - recipe[kafka]
+    includes:
+      - centos-6
+      - centos-7
+      - debian-8
+      - fedora-24
+    attributes:
+      kafka:
+        init_style: 'runit'
